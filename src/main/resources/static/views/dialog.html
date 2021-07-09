@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>EasyUI示例-dialog</title>
+<!-- 引入css -->
+<!-- 默认下是使用default，我们可以把他换成black主题还有其他，显示出来的就是黑色的 -->
+<link rel="stylesheet" href="../themes/default/easyui.css">
+<link rel="stylesheet" href="../themes/icon.css">
+<!-- 引入js -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../js/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<div id='d2'>对话窗口</div>
+<script type="text/javascript">
+	$("#d2").dialog({
+		width:300,
+		height:300,
+		title:'对话框',
+		iconCls:'icon-large-smartart',
+		toolbar:[{//在对话框顶部绑定按钮
+		    text:'编辑',
+		    iconCls:'icon-edit',
+		    handler:function(){alert('edit')}
+		},{
+		    text:'帮助',
+		    iconCls:'icon-help',
+		    handler:function(){alert('help')}
+		}],
+		buttons:[
+			{
+				text:'保存',
+				iconCls:'icon-ok',
+				handler:function(){
+					alert("ok")
+				}
+			},{
+				text:'关闭',
+				iconCls:'icon-cancel',
+				handler:function(){
+					alert("cancel")
+				}
+			}
+		]
+	})
+</script>
+</body>
+</html>

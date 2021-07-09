@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+					"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hsx.easyui.mapper.PersonMapper">
+ 
+    <select id="selectPersonList" resultType="Person">
+        select id,name,age,sex,phone,address from person
+       	<if test="keyword != null">
+       		where name like "%"#{keyword}"%"
+       	</if>
+        <if test="sort != null and order != null">
+        		 order by ${sort} ${order}
+        	</if>
+    </select>
+    
+    <delete id="removeBeatch">
+    	delete from person
+        where id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

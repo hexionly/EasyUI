@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>EasyUI示例-window</title>
+
+<!-- 引入css -->
+<!-- 默认下是使用default，我们可以把他换成black主题还有其他，显示出来的就是黑色的 -->
+<link rel="stylesheet" href="../themes/default/easyui.css">
+<link rel="stylesheet" href="../themes/icon.css">
+<!-- 引入js -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../js/easyui-lang-zh_CN.js"></script>
+
+</head>
+<body>
+
+<a id="btn">登录</a>
+<div id='d1'></div>
+<script type="text/javascript">
+	$("#btn").linkbutton({
+		iconCls:'icon-more',
+		onClick:function(){
+			$("#d1").window({
+				width:'300px',
+				height:'300px',
+				title:'我是窗口',
+				href:'panel_index.jsp',
+				collapsible:false,
+				/* border:'thick' */
+			})
+		}
+	})
+</script>
+</body>
+</html>

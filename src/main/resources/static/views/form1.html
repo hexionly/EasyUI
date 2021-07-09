@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>EasyUI示例-form</title>
+<!-- 引入css -->
+<!-- 默认下是使用default，我们可以把他换成black主题还有其他，显示出来的就是黑色的 -->
+<link rel="stylesheet" href="../themes/default/easyui.css">
+<link rel="stylesheet" href="../themes/icon.css">
+<!-- 引入js -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../js/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<div id="btn">
+	<a id="update">修改</a>
+</div>
+<!-- 弹出窗口 -->
+	<div id="fmdiv">
+		<form id="fm" method='post'>
+			<fieldset>
+				<legend>添加客户信息</legend>
+				<table>
+					<tr>
+						<td>姓名：</td>
+						<td><input id="name" type="text" name="name"></td>
+					</tr>
+					<tr>
+						<td>年 龄：</td>
+						<td><input type="text" name="age" id="age"></td>
+					</tr>
+					<tr>
+						<td>性 别：</td>
+						<td><input type="text" name="sex" id="sex"></td>
+					</tr>
+					<tr>
+						<td>手机号：</td>
+						<td><input type="text" name="phone" id="phone"></td>
+					</tr>
+					<tr>
+						<td>地 址：</td>
+						<td><input type="text" name="address" id="address"></td>
+					</tr>
+				</table>
+			</fieldset>
+		</form>
+	</div>
+	
+	<script type="text/javascript">
+		$("#update").linkbutton({
+			iconCls:"icon-edit",
+			onClick:function(){
+				//然后再把查出来的值放入输入框中
+				//这里我么可以传入id直接将后台查询出来的结果传回来回调
+				$.ajax({
+					url:"/person/update.do",
+					type:"get",
+					dataType: 'json',
+					data:{id:1},
+					success:function(data){
+						if(data!=null){
+							//按钮有点击事件后，先把对话框显示出来
+							$("#fmdiv").dialog({closed:false})
+							//回调
+							$("#fm").form("load",data)
+							//alert("我已经回调过去了")
+						}
+					},
+					error:function(){
+						$.messager.alert({
+							title:" 错误",
+							msg:"你想要修改的数据不存在！",
+							iconCls:"icon-no"
+						});
+						return false;
+					}
+				})
+			}
+		});
+	
+		//设置对话框默认情况是不显示
+		$("#fmdiv").dialog({
+			title:"添加用户",
+			iconCls:'icon-man',
+			width:300,
+			closed:true,
+			buttons:[
+				{
+					text:"添加",
+					iconCls:"icon-add",
+					handler:function(){
+						$("#fm").form("submit",{
+							url:"/person/add.do",
+							success:function(data){
+								console.log(JSON.parse(data))
+								if(JSON.parse(data).code == 200){
+									//按钮有点击事件后，先把对话框显示出来
+									$("#fmdiv").dialog({closed:false})
+									$.messager.alert({
+										title:"成功",
+										msg:JSON.parse(data).msg,
+										iconCls:"icon-ok"
+									});
+								}else{
+									$.messager.alert({
+										title:"错误",
+										msg:"添加失败",
+										iconCls:"icon-no"
+									});
+									return false;
+								}
+							}
+						})
+					}
+				},
+				{
+					text:'清空',
+					iconCls:'icon-clear',
+					handler:function(){
+						$("#fm").form("clear")
+					}
+				}
+			]
+		})
+		
+		$("#name").textbox({
+			required:true,
+			missingMessage:"请输入用户名"
+			
+		})
+		
+		$("#age").numberbox({
+			required:true,
+			precision:0,//位数
+			min:0,
+			max:120,
+			missingMessage:"请输入年龄"
+		})
+		
+		$("#sex").combobox({
+			required:true,
+			panelHeight:67,
+			valueField: 'label',
+			textField: 'value',
+			data: [{
+			    label: '男',
+			    value: '男'
+			},{
+			    label: '女',
+			    value: '女'
+			}],
+			missingMessage:"请选择性别"			
+		})
+		
+		$("#phone").numberbox({
+			required:true,
+			precision:0,//位数
+			validType:'length[11,11]',
+			invalidMessage:'手机号为11位数',
+			missingMessage:"请输入手机号"
+		})
+		
+		$("#address").textbox({
+			height:60,
+			required:true,
+			multiline:true,
+			missingMessage:"请输入地址"
+		})
+	</script>
+</body>
+</html>

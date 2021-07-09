@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>EasyUI示例-Message</title>
+<!-- 引入css -->
+<!-- 默认下是使用default，我们可以把他换成black主题还有其他，显示出来的就是黑色的 -->
+<link rel="stylesheet" href="../themes/default/easyui.css">
+<link rel="stylesheet" href="../themes/icon.css">
+<!-- 引入js -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../js/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+	<a class="easyui-linkbutton" data-options="iconCls:'icon-add',onClick:test1"></a>
+	<a class="easyui-linkbutton" data-options="iconCls:'icon-remove',onClick:test2"></a>
+	<a class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:test3"></a>
+	<a class="easyui-linkbutton" data-options="iconCls:'icon-ok',onClick:test4"></a>
+	
+	<script type="text/javascript">
+		//显示
+		function test1() {
+			$.messager.show({
+				title:'我是消息',
+				msg:'我将在5秒后关闭',
+				timeout:5000,
+				showType:'slide',
+				close:'close'
+			});
+		}
+		
+		///警告
+		function test2(){
+			$.messager.alert({
+				title:"我是警告",
+				msg:"我是一个错误",
+				icon:'error',
+				fn:function(){
+					alert('确定')
+				}
+			})
+		}
+		
+		//选择确定框
+		function test3() {
+			$.messager.confirm({
+			   title:'确认对话框',
+			   msg:'确定点击确定吗？',
+			   fn:function(res){
+				   if(res){
+					   alert("我确定")
+				   }else{
+					   alert("我取消")
+				   }
+			   }
+			});
+		}
+		//$.messager.prompt,输入
+		
+		//进度消息窗体
+		function test4(){
+			$.messager.progress({
+				title:'下载',
+				msg:"进行中...",
+				text:"100%",
+				interval:1000
+			});
+		}
+	</script>
+</body>
+</html>

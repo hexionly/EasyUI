@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>EasyUI示例-datagrid</title>
+<!-- 引入css -->
+<!-- 默认下是使用default，我们可以把他换成black主题还有其他，显示出来的就是黑色的 -->
+<link rel="stylesheet" href="../themes/default/easyui.css">
+<link rel="stylesheet" href="../themes/icon.css">
+<!-- 引入js -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../js/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+	<!-- 数据信息列表展示 -->
+	<div id="datagrid_person">
+		<table>
+			<!-- 数据信息显示区域 -->
+		</table>
+	</div>
+
+	<!-- 添加用户的窗口 -->
+	<div id="dialog_person_add" align="center">
+		<form id="fm" method="post">
+			<table>
+				<tr>
+					<td>姓名：</td>
+					<td><input id="name" type="text" name="name"></td>
+				</tr>
+				<tr>
+					<td>年 龄：</td>
+					<td><input type="text" name="age" id="age"></td>
+				</tr>
+				<tr>
+					<td>性 别：</td>
+					<td><input type="text" name="sex" id="sex" data-options="valueField: 'label',
+						textField: 'value',data: [{label: '男',value: '男'},{label: '女',value: '女'}]">
+					</td>
+				</tr>
+				<tr>
+					<td>手机号：</td>
+					<td><input type="text" name="phone" id="phone"></td>
+				</tr>
+				<tr>
+					<td>地 址：</td>
+					<td><input type="text" name="address" id="address"></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+		
+<script type="text/javascript">
+/**
+ * 这里还有个修改的操作，仿照单个删除来操作，窗口的显示参照form1页面来实现
+ */
+$(function(){
+	/* 数据信息列表展示 */
+	$("#datagrid_person").datagrid({
+		title:"用户信息",
+		iconCls:"icon-man",
+		method:'get',
+		url:'/person/show.do',
+		columns:[[
+			{field:'id',title:'ID',width:80,align:'center',checkbox:true},
+	        {field:'name',title:'姓名',width:80,align:'center'},
+	        {field:'age',title:'年龄',width:60,align:'center',sortable:true},
+	        {field:'sex',title:'性别',width:60,align:'center',
+	        	styler: function(value,row,index){
+	        		if(value == '男'){
+	        			return "color:green;font-weight:bold";
+	        		}else{
+	        			return "color:red;font-weight:bold";
+	        		}
+	            }	
+	        },
+	        {field:'phone',title:'电话号',width:100,align:'center'},
+	        {field:'address',title:'地址',width:220,align:'center'},
+	        {field:'operator',title:'操作',width:100,align:'center',
+	        	formatter: function(value,row,index){
+	        		//value当前行的值
+	        		return "<a class='update' href='#'>修改</a>"+
+	        			"<a class='delete' href='#'>删除</a>";
+	        	}
+	        }
+	    ]],
+	    toolbar:[
+	    	{
+	    		text:"添加",
+	    		iconCls:"icon-add",
+	    		handler:function(){
+	    			$("#dialog_person_add").dialog({
+	    				closed:false
+	    			})
+	    		}
+	    	},
+	    	{
+	    		text:"移除选中",
+	    		iconCls:"icon-remove",
+				handler:function(){
+					var data = $("#datagrid_person").datagrid('getChecked')
+					var ids = new Array()
+					for(var i = 0; i < data.length; i++){
+						ids[i]=data[i].id
+					}
+					if(ids.length === 0){
+						$.messager.show({
+							title:"⚠警告",
+							msg:"你还没有选择需要删除的数据。"
+						});
+						return false;
+					}else{
+						$.messager.confirm('确认','您确认想要删除记录吗？',function(r){
+						    if (r){
+						    	$.ajax({
+									url:"/person/removeBeatch.do",
+									type:"post",
+									dataType: 'json',
+									data:{ids:ids},
+									traditional:true, //传输数组是必备的设置
+									success:function(data){
+										$.messager.show({
+											title:" 删除提示",
+											msg:data.msg,
+											timeout:5000,
+										});
+										$("#datagrid_person").datagrid("load")
+									}
+								})
+						    }
+						});
+					}
+				}
+	    	},
+	    	{
+	    		text:"<input id='search' type='text' name='search' placeholder='搜索'>"
+	    	}
+	    ],
+	    onLoadSuccess:function(){//datagrid加载完毕之后执行
+	    	$(".delete").linkbutton({
+	    		iconCls:'icon-no',
+	    		onClick:function(){
+	    			/* 每一行后边的删除操作 */
+	    			var id = $(this).parent().parent().parent().children().eq(0).find("input").val()
+	    			$.messager.confirm('⚠警告','您确认想要删除记录吗？',function(r){
+					    if (r && id != ''){
+					    	$.ajax({
+			    				url:"/person/removeBeatch.do",
+			    				type:"post",
+			    				dataType: 'json',
+			    				data:{ids:id},
+			    				traditional:true, //传输数组是必备的设置
+			    				success:function(data){
+			    					$.messager.show({
+			    						title:" 删除提示",
+			    						msg:data.msg,
+			    						timeout:5000,
+			    					});
+			    					$("#datagrid_person").datagrid("load")
+			    				}
+			    			})
+					    }
+					})
+	    		}
+	    	})
+	    	$(".update").linkbutton({
+	    		iconCls:'icon-edit'
+	    	})
+	    },
+	    checkOnSelect:true,//复选框选中才是被选中
+	    fitColumns:true,//列舒展
+	    striped:true,//是否条纹
+	    rownumbers:true,//显示行前序号
+	    pagination:true,//开启分页
+	    pagePosition:"bottom",//页码显示在底部
+	    pageSize:15,//每页显示数
+	    pageList:[10,15,20,30,50]//每页可选的显示数
+	})
+	
+	/* 用户的添加 */
+	$("#dialog_person_add").dialog({
+		title:"添加用户",
+		iconCls:'icon-man',
+		width:300,
+		closed:true,
+		buttons:[
+			{
+				text:"提交",
+				iconCls:"icon-add",
+				handler:function(){
+					$("#fm").form("submit",{
+						url:"/person/add.do",
+						success:function(data){
+							console.log(JSON.parse(data))
+							if(JSON.parse(data).code == 200){
+								//按钮有点击事件后，先把对话框隐藏出来
+								$("#dialog_person_add").dialog({closed:true})
+								$("#datagrid_person").datagrid("load")
+								$.messager.show({
+									title:"成功",
+									msg:JSON.parse(data).msg,
+									iconCls:"icon-ok",
+									timeout:3000
+								});
+							}else{
+								$.messager.alert({
+									title:"错误",
+									msg:"添加失败",
+									iconCls:"icon-no"
+								});
+								return false;
+							}
+						}
+					})
+				}
+			},
+			{
+				text:'清空',
+				iconCls:'icon-clear',
+				handler:function(){
+					$("#fm").form("clear")
+				}
+			}
+		]
+	})
+	
+	/* 搜索框 */
+	$("#search").searchbox({
+		selectName:'name',
+	    prompt:'请输入值',
+	    searcher:function(value,name){
+	    	$("#datagrid_person").datagrid("load",{
+	    		keyword:value
+	    	})
+	    }
+	})
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>EasyUI示例-form</title>
+<!-- 引入css -->
+<!-- 默认下是使用default，我们可以把他换成black主题还有其他，显示出来的就是黑色的 -->
+<link rel="stylesheet" href="../themes/default/easyui.css">
+<link rel="stylesheet" href="../themes/icon.css">
+<!-- 引入js -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../js/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<form id="ff" method="post">
+    <div>
+        <label for="name">用户名:</label>
+        <input id="name" type="text" name="name">
+    </div>
+    <div>
+        <label for="age">年龄:</label>
+        <input id="age" type="text" name="age">
+    </div>
+    <div>
+        <label for="birth">生日:</label>
+        <input id="birth" type="text" name="birth">
+    </div>
+    <div>
+        <label for="search">搜索:</label>
+        <input id="search" type="text" name="search">
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input class="easyui-validatebox" type="text" name="email" data-options="validType:['email','length[0,100]']">
+    </div>
+    <div><input type="submit" value="提交"></div>
+</form>
+
+<script type="text/javascript">
+	//姓名
+	$("#name").textbox({
+		//height:400,
+		iconCls:'icon-man',
+		iconAlign:'left',
+		required:true,
+		missingMessage:'用户名不能为空',
+		prompt:'请输入用户名',
+		//type:'password'
+		//multiline:true
+		//readonly:true
+	})
+	
+	//年龄
+	//设置为数字框时只能输入数字，输入其他就没有相应
+	$("#age").numberbox({
+		min:0,
+		max:120,
+		prefix:"￡"
+	})
+	
+	$('#birth').datebox({
+    	required:true,
+    	editable:false
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>EasyUI示例-panel</title>
+
+<!-- 引入css -->
+<!-- 默认下是使用default，我们可以把他换成black主题还有其他，显示出来的就是黑色的 -->
+<link rel="stylesheet" href="../themes/default/easyui.css">
+<link rel="stylesheet" href="../themes/icon.css">
+<!-- 引入js -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../js/easyui-lang-zh_CN.js"></script>
+
+</head>
+<body>
+
+<!-- div+easyui-panel -->
+<div class="easyui-panel" data-options="title:'标题', iconCls:'icon-man'">hello</div>
+<br>
+<!-- 使用js -->
+<div id="pl">
+<!-- 把在option中的替换成新的一个 -->
+	<!-- <header>哈哈哈</header> -->
+哈哈哈哈
+</div>
+
+<script type="text/javascript">
+	$("#pl").panel({
+		width:'300px',
+		height:'auto',
+		title:'admin',
+		iconCls:'icon-man',
+		closable:true,
+		minimizable:true,
+		maximizable:true,
+		collapsible:true,
+		tools:[
+			{
+				iconCls:'icon-add',
+				handler:function(){
+					alert("我是增加添")
+				}
+			},{
+		        iconCls:'icon-edit',
+		        handler:function(){
+		        	alert('edit')
+		        }
+		    },{
+				iconCls:'icon-save',
+				handler:function(){
+					alert("save")
+				}
+			},{
+				
+			}
+		],
+		href:'panel_index.jsp'
+	})
+</script>
+
+</body>
+</html>
